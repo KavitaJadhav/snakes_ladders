@@ -2,21 +2,22 @@ require_relative './cell'
 require_relative './player'
 require_relative './board'
 require_relative './dice'
+require_relative './snake'
 
 class Game
-  attr_reader :board, :player, :turns
+  attr_reader :board, :player
 
-  def initialize(turns)
-    @board = Board.setup
+  def initialize
+    @board = Board.new
     @player = Player.new
-    @turns = turns
   end
 
-  def play
-    for i in 1.upto(turns)
-      dice_output = Dice.roll
-      next_cell = board.get_cell(player.current_cell, dice_output)
-      player.current_cell = next_cell
-    end
+  def setup_board(snake_positions)
+    board.setup(snake_positions)
+  end
+
+  def navigate_player(positions)
+    next_cell = board.cell_from(player.current_cell, positions)
+    player.move(next_cell.destination)
   end
 end
